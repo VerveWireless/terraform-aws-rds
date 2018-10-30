@@ -92,7 +92,7 @@ resource "aws_security_group_rule" "ingress" {
   source_security_group_id = "${element(var.security_group_ids, count.index)}"
   security_group_id        = "${aws_security_group.default.id}"
   description              = "terraform: allow database"
-  count                    = "${length(join(",", var.security_group_ids))}"
+  count                    = "${length(var.security_group_ids)}"
 }
 
 module "dns_host_name" {
