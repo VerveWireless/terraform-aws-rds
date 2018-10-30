@@ -84,6 +84,17 @@ resource "aws_security_group_rule" "egress" {
   security_group_id = "${aws_security_group.default.id}"
 }
 
+resource "aws_security_group_rule" "ingress" {
+  type                     = "ingress"
+  from_port                = "${var.database_port}"
+  to_port                  = "${var.database_port}"
+  protocol                 = "tcp"
+  source_security_group_id = "${element(var.security_group_ids, count.index)}"
+  security_group_id        = "${aws_security_group.default.id}"
+  description              = "terraform: allow database"
+  count                    = "${length(join(",", var.security_group_ids))}"
+}
+
 module "dns_host_name" {
   source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.2.5"
   namespace = "${var.namespace}"
