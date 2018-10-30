@@ -71,21 +71,17 @@ resource "aws_security_group" "default" {
   description = "Allow inbound traffic from the security groups"
   vpc_id      = "${var.vpc_id}"
 
-  ingress {
-    from_port       = "${var.database_port}"
-    to_port         = "${var.database_port}"
-    protocol        = "tcp"
-    security_groups = ["${var.security_group_ids}"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = "${module.label.tags}"
+}
+
+resource "aws_security_group_rule" "egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "allow outbound database traffic"
+  security_group_id = "${aws_security_group.default.id}"
 }
 
 module "dns_host_name" {
