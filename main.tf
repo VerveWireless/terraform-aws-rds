@@ -96,6 +96,7 @@ resource "aws_security_group_rule" "ingress" {
 }
 
 module "vpn_sg" {
+  source            = "git@github.com:VerveWireless/terraform-verve-vpn-sg-rule.git"
   from_port         = "${var.database_port}"
   to_port           = "${var.database_port}"
   security_group_id = "${aws_security_group.default.id}"
