@@ -95,6 +95,12 @@ resource "aws_security_group_rule" "ingress" {
   count                    = "${length(var.security_group_ids)}"
 }
 
+module "vpn_sg" {
+  from_port         = "${var.database_port}"
+  to_port           = "${var.database_port}"
+  security_group_id = "${aws_security_group.default.id}"
+}
+
 module "dns_host_name" {
   source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.2.5"
   namespace = "${var.namespace}"
